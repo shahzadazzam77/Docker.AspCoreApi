@@ -1,0 +1,31 @@
+﻿@Docker.AspCoreApi_HostAddress = https://localhost:7195
+
+POST {{Docker.AspCoreApi_HostAddress}}/api/weather
+Content-Type: application/json
+
+{
+  //Weather
+}
+
+###
+
+GET {{Docker.AspCoreApi_HostAddress}}/api/weather
+
+###
+
+GET {{Docker.AspCoreApi_HostAddress}}/api/weather/0
+
+###
+
+DELETE {{Docker.AspCoreApi_HostAddress}}/api/weather/0
+
+###
+
+PUT {{Docker.AspCoreApi_HostAddress}}/api/weather/0
+Content-Type: application/json
+
+{
+  //Weather
+}
+
+###
