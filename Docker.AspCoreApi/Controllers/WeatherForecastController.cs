@@ -9,10 +9,12 @@ namespace Docker.AspCoreApi.Controllers
     public class WeatherController : ControllerBase
     {
         private readonly WeatherDbContext _context;
+        private readonly ILogger<WeatherController> _logger;
 
-        public WeatherController(WeatherDbContext context)
+        public WeatherController(WeatherDbContext context, ILogger<WeatherController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Weather
@@ -26,8 +28,22 @@ namespace Docker.AspCoreApi.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Weather>> GetWeather(int id)
         {
-            var weather = await _context.Weathers.FindAsync(id);
+            if (id == 1)
+            {
+                return StatusCode(401, "UnAuth Error");
+            }
+            else if (id == 2)
+            {
+                // Simulate a server error
+                return StatusCode(500, "Internal Server Error");
+            }
+            else if (id == 5 || id == 9 || id >= 12)
+            {
+                _logger.LogInformation($"error StatusCodes.Status429TooManyRequests");
+                return StatusCode(StatusCodes.Status429TooManyRequests, "Rate limit exceeded. Please try again later.");
+            }
 
+            var weather = await _context.Weathers.FindAsync(id);
             if (weather == null)
             {
                 return NotFound();

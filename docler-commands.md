@@ -46,10 +46,12 @@ docker rmi <image_name_or_id>
 
 ## Run the image locally
 * docker run -d -p 1433:1433 your_dockerhub_username/sqlserver-app:latest
+* docker run -p 4000:8080 -e ASPNETCORE_ENVIRONMENT=Development product-api:latest
 
 ## Push to Hub
 * docker login
 * docker push your_dockerhub_username/sqlserver-app:latest
+* 
 
 
 

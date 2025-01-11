@@ -1,4 +1,4 @@
-﻿@Docker.AspCoreApi_HostAddress = https://localhost:7195
+﻿@Docker.AspCoreApi_HostAddress = http://3.235.222.128:8080
 
 POST {{Docker.AspCoreApi_HostAddress}}/api/weather
 Content-Type: application/json

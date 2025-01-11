@@ -16,6 +16,7 @@
     </None>
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
+    <None Include="aws-commands.md" />
     <None Include="docler-commands.md" />
   </ItemGroup>
 </Project>
