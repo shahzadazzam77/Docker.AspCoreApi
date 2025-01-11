@@ -1,0 +1,49 @@
+services:
+  docker.aspcoreapi:
+    image: 779911/dockeraspcoreapi_prod:v1.0.0 # Versioning added
+    container_name:  dockeraspcoreapi_container_prod
+    build:
+      context: Docker.AspCoreApi
+      dockerfile: Dockerfile
+    ports:
+      - "6000:6000"
+      - "6001:6001"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=6000
+      - ASPNETCORE_HTTPS_PORTS=6001
+      # - ASPNETCORE_Kestrel__Certificates__Default__Password="Test123"  # Replace with the actual password
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/app/.aspnet/https/Docker.AspCoreApi.pfx
+      #- dotnet dev-certs https -ep %USERPROFILE%\.aspnet\https\Docker.AspCoreApi.pfx -p Test123
+      # - dotnet dev-certs https --trust
+    volumes:
+      - ~/.aspnet/https:/app/.aspnet/https:ro
+
+    # volumes:
+    #   - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+    #   - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+
+  docker.database:
+    image: mcr.microsoft.com/mssql/server:2019-latest  
+    container_name: sqlserver-prod
+    environment:
+      - SA_PASSWORD=YourStrongPassword123! # Use environment variables
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_HTTP_PORTS=1433
+      - ASPNETCORE_HTTPS_PORTS=1433
+      - ACCEPT_EULA=Y                        # Accept SQL Server EULA
+      - MSSQL_PID=Express                    # Specify the edition, e.g., Express, Standard, or Enterprise (optional, defaults to Developer)
+    volumes:
+      - ./data:/var/opt/mssql/data
+      - ./log:/var/opt/mssql/log
+      - ./secrets:/var/opt/mssql/secrets
+    ports:
+      - "1433:1433"                           # Expose port for client connections (ensure it's not exposed to the public)
+    restart: unless-stopped                  # Ensure automatic restarts unless manually stopped
+    healthcheck:
+      test: ["CMD", "sqlcmd", "-Q", "SELECT 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    logging:
+      driver: "json-file"                    # Use a suitable logging driver for production

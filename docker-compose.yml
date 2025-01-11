@@ -1,7 +1,7 @@
 services:
   docker.aspcoreapi:
     image: ${DOCKER_REGISTRY-}dockeraspcoreapi
-    container_name:  docker.aspcoreapi.container
+    container_name:  aspcoreapi.dev
     build:
       context: Docker.AspCoreApi
       dockerfile: Dockerfile
@@ -9,29 +9,20 @@ services:
       - "5000:5000"
       - "5001:5001"
 
-  docker.database:
-    image: mcr.microsoft.com/mssql/server:2019-latest  
-    container_name: docker.mssql.database
-    environment:
-      - SA_PASSWORD=YourStrongPassword123!   # Ensure the password meets SQL Server's complexity requirements
-      - ACCEPT_EULA=Y                        # Accept SQL Server EULA
-      - MSSQL_PID=Express                    # Specify the edition, e.g., Express, Standard, or Enterprise (optional, defaults to Developer)
-    volumes:
-      - ./path/to/data:/var/opt/mssql/data    # Persist data to a host directory or volume
-      - ./path/to/logs:/var/opt/mssql/log     # Persist logs to a host directory or volume
-    ports:
-      - "1433:1433"                           # Expose port for client connections (ensure it's not exposed to the public)
-    networks:
-      - my_network                           # Use a dedicated network
-    restart: unless-stopped                  # Ensure automatic restarts unless manually stopped
-    healthcheck:                             # Configure health check for monitoring container health
-      test: ["CMD", "sqlcmd", "-U", "sa", "-P", "YourStrongPassword123!", "-Q", "SELECT 1"]
-      interval: 30s
-      retries: 3
-      timeout: 10s
-    logging:
-      driver: "json-file"                    # Use a suitable logging driver for production
-
-networks:
-  my_network:
-    driver: bridge
+  # docker.database:
+  #   image: mcr.microsoft.com/mssql/server:2019-latest  
+  #   container_name: sqlserver-dev
+  #   environment:
+  #     - SA_PASSWORD=YourStrongPassword123!   # Ensure the password meets SQL Server's complexity requirements
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - ASPNETCORE_HTTP_PORTS=1434
+  #     - ASPNETCORE_HTTPS_PORTS=1434
+  #     - ACCEPT_EULA=Y                        # Accept SQL Server EULA
+  #     - MSSQL_PID=Express                    # Specify the edition, e.g., Express, Standard, or Enterprise (optional, defaults to Developer)
+  #   ports:
+  #     - "1434:1434"   
+  #   logging:
+  #     driver: "json-file"                    # Use a suitable logging driver for production
+  #   volumes:
+  #     - ./path/to/data:/var/opt/mssql/data    # Persist data to a host directory or volume
+  #     - ./path/to/logs:/var/opt/mssql/log     # Persist logs to a host directory or volume
